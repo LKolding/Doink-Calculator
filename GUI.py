@@ -1,6 +1,8 @@
 from tkinter import Tk
-from tkinter import Button, Entry, Radiobutton, Frame, Label, Spinbox, Listbox
+from tkinter import Button, Entry, Radiobutton, Frame, Label, Spinbox, Listbox, Checkbutton
 from tkinter import StringVar, messagebox
+from tkinter import IntVar
+from tkinter.constants import SE
 
 from functions import write_to_db
 from functions import get_from_db
@@ -81,49 +83,68 @@ class AddEntry:
         self.root.resizable(False, False)
 
     def _init_widgets(self):
-        # ROW 0
-        self.row0 = Frame(self.root)
-        self.owner_selection_spinbox = Spinbox(self.row0, values=self.owners, state="readonly")
-        # ROW 1
-        self.row1 = Frame(self.root)
-        self.entry_type = StringVar(self.row1, value="doink")
-        self.doink_radio_button = Radiobutton(self.row1, text="Doink", variable=self.entry_type, value="doink")
-        self.bowl_radio_button = Radiobutton(self.row1, text="Bowl", variable=self.entry_type, value="bowl")
-        # ROW 2
-        self.row2 = Frame(self.root)
-        self.cigs_label = Label(self.row2, text="Smokes:")
-        self.cigs_entry = Entry(self.row2)
-        # ROW 3
-        self.row3 = Frame(self.root)
-        self.grams_label = Label(self.row3, text="Grams:")
-        self.grams_entry = Entry(self.row3)
-        # ROW 4
-        self.row4 = Frame(self.root)
-        self.add_button = Button(self.row4, text="Add", command=self.add_entry)
+        # ROW 0 user selection
+        self.main_frame = Frame(self.root, bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.owner_label = Label(self.main_frame, text="User: ", bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.owner_selection_spinbox = Spinbox(self.main_frame, values=self.owners, state="readonly")
+        # ROW 1 doink/bowl choice
+        self.type_entry_frame = Frame(self.main_frame, bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.entry_type = StringVar(self.type_entry_frame, value="doink")
+        self.doink_radio_button = Radiobutton(self.type_entry_frame, text="Doink", variable=self.entry_type, value="doink", bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.bowl_radio_button = Radiobutton(self.type_entry_frame, text="Bowl", variable=self.entry_type, value="bowl", bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        # ROW 2 ciggy entry
+        self.smokes_entry_frame = Frame(self.main_frame, bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.cigs_label = Label(self.smokes_entry_frame, text="Smokes:", bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.cigs_entry = Entry(self.smokes_entry_frame, bg=BACKGROUND_COLOR)
+        # ROW 3 gram entry 
+        self.gram_entry_frame = Frame(self.main_frame, bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.grams_label = Label(self.gram_entry_frame, text="Grams:", bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.grams_entry = Entry(self.gram_entry_frame)
+        # ROW 4 checkbuttons
+
+        self.filter_check = IntVar(self.main_frame, value=0)
+        self.paper_check = IntVar(self.main_frame, value=0)
+
+        self.checkbuttons_frame = Frame(self.main_frame, bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.filter_label = Label(self.checkbuttons_frame, text="Filter: ", bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.filter_checkbutton = Checkbutton(self.checkbuttons_frame,variable=self.filter_check, onvalue=1,offvalue=0,bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.paper_label = Label(self.checkbuttons_frame, text="Paper: ", bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.paper_checkbutton = Checkbutton(self.checkbuttons_frame, variable=self.paper_check, onvalue=1,offvalue=0, bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        # ROW 5 add button
+        self.submit_button_frame = Frame(self.main_frame, bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
+        self.add_button = Button(self.submit_button_frame, text="Add", command=self.add_entry)
 
     def _grid(self):
         # ROW 0
-        self.owner_selection_spinbox.pack()
+        self.owner_label.grid(column=0,row=0, sticky="W")
+        self.owner_selection_spinbox.grid(column= 0, row= 0, sticky="E")
         # ROW 1
-        self.doink_radio_button.pack(side="left")
-        self.bowl_radio_button.pack(side="right")
+        self.doink_radio_button.grid(column= 0, row= 0)
+        self.bowl_radio_button.grid(column= 1, row= 0)
         # ROW 2
-        self.cigs_label.pack(side="left")
-        self.cigs_entry.pack(side="right")
+        self.cigs_label.grid(column= 0, row= 0, sticky="W")
+        self.cigs_entry.grid(column= 1, row= 0, sticky="E")
         # ROW 3
-        self.grams_label.pack(side="left")
-        self.grams_entry.pack(side="right")
-        # ROW 4
-        self.add_button.pack(fill="both")
+        self.grams_label.grid(column= 0, row= 0, sticky="W")
+        self.grams_entry.grid(column= 1, row= 0, sticky="E")
+        # row 4
+        self.filter_label.grid(column=0, row=0, sticky="W")
+        self.filter_checkbutton.grid(column= 1, row= 0, sticky="E")
+
+        self.paper_label.grid(column=0, row=1, sticky="W")
+        self.paper_checkbutton.grid(column= 1, row= 1, sticky="E")
+        # ROW 5
+        self.add_button.grid(column= 0, row= 0)
         # FRAMES
-        self.row0.pack()
-        self.row1.pack()
-        self.row2.pack()
-        self.row3.pack()
-        self.row4.pack()
+        self.main_frame.grid(column= 0, row= 0, sticky="EW")
+        self.type_entry_frame.grid(column= 0, row= 1)
+        self.smokes_entry_frame.grid(column= 0, row= 2, sticky="EW")
+        self.gram_entry_frame.grid(column= 0, row= 3, sticky="EW")
+        self.checkbuttons_frame.grid(column= 0, row= 4, sticky="EW")
+        self.submit_button_frame.grid(column= 0, row= 5)
 
     def add_entry(self):
-        try: write_to_db(type=self.entry_type.get(), owner=self.owner_selection_spinbox.get(),smokes=self.cigs_entry.get(), grams=self.grams_entry.get())
+        try: write_to_db(type=self.entry_type.get(), owner=self.owner_selection_spinbox.get(),smokes=self.cigs_entry.get(), grams=self.grams_entry.get(), filter=self.filter_check.get(), paper=self.paper_check.get())
         except Exception as e: show_warning("Error!","Couldn't add doink/bowl :(")
         else: show_info("%s added!"%self.entry_type.get(), "%s added for user %s"%(self.entry_type.get(), self.owner_selection_spinbox.get()))
         finally: self.root.destroy()
@@ -168,22 +189,22 @@ class SettingsWindow:
 
     def _init_widgets(self):
         # column 1
-        self.column1 = Frame(self.root)
-        self.bg_color_label = Label(self.column1, text="Background color:")
+        self.column1 = Frame(self.root, bg=BACKGROUND_COLOR)
+        self.bg_color_label = Label(self.column1, text="Background color:", bg=BACKGROUND_COLOR)
         self.bg_color_selection = StringVar(self.column1, value=self.settings['background_color'])
-        self.bg_color_darkgrey = Radiobutton(self.column1, text="Grey",variable=self.bg_color_selection, value="darkgrey")
-        self.bg_color_darkred = Radiobutton(self.column1, text="Red",variable=self.bg_color_selection,value="darkred")
+        self.bg_color_darkgrey = Radiobutton(self.column1, text="Grey",variable=self.bg_color_selection, value="darkgrey", bg=BACKGROUND_COLOR)
+        self.bg_color_darkred = Radiobutton(self.column1, text="Red",variable=self.bg_color_selection,value="darkred", bg=BACKGROUND_COLOR)
         # column 1 2nd row
-        self.btn_color_label = Label(self.column1, text="Button color:")
+        self.btn_color_label = Label(self.column1, text="Button color:", bg=BACKGROUND_COLOR)
         self.btn_color_selection = StringVar(self.column1, value=self.settings['button_color'])
-        self.btn_color_darkblue = Radiobutton(self.column1, text="Dark blue",variable=self.btn_color_selection, value="darkblue")
-        self.btn_color_lightblue = Radiobutton(self.column1, text="Light blue",variable=self.btn_color_selection, value="lightblue")
+        self.btn_color_darkblue = Radiobutton(self.column1, text="Dark blue",variable=self.btn_color_selection, value="darkblue", bg=BACKGROUND_COLOR)
+        self.btn_color_lightblue = Radiobutton(self.column1, text="Light blue",variable=self.btn_color_selection, value="lightblue", bg=BACKGROUND_COLOR)
         # column 1 3rd row
-        self.price_label = Label(self.column1, text="Price per gram: (current price: %.2f)"%self.settings['cost_per_gram'])
-        self.price_entry = Entry(self.column1)
+        self.price_label = Label(self.column1, text="Price per gram: (current price: %.2f)"%self.settings['cost_per_gram'], bg=BACKGROUND_COLOR)
+        self.price_entry = Entry(self.column1, bg=BACKGROUND_COLOR)
         # column 2
-        self.column2 = Frame(self.root)
-        self.users_label = Label(self.column2, text="Users:")
+        self.column2 = Frame(self.root, bg=BACKGROUND_COLOR)
+        self.users_label = Label(self.column2, text="Users:", bg=BACKGROUND_COLOR)
 
         self.users_list = Listbox(self.column2)
         self.users_list.insert("end", *self.settings['owners'])
@@ -192,7 +213,8 @@ class SettingsWindow:
         self.add_user_button = Button(self.column2, text="Add", command=self.add_user)
 
         # Bottom
-        self.apply_button = Button(self.root, text="Apply settings", command=self._set_settings)
+        self.bottom_frame = Frame(self.root, bg=BACKGROUND_COLOR)
+        self.apply_button = Button(self.bottom_frame, text="Apply settings", command=self._set_settings)
 
     def _grid(self):
         # column 1
@@ -211,10 +233,15 @@ class SettingsWindow:
         self.users_list.grid(column=0, row=1, columnspan=2, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
         self.delete_user_button.grid(column=0, row=2, sticky="EW", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
         self.add_user_button.grid(column=1, row=2, sticky="EW", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
+
+        # submit button
+        self.apply_button.grid(sticky="NSEW", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
+
         # self.root
-        self.column1.grid(column=0, row=0)
-        self.column2.grid(column=1, row=0)
-        self.apply_button.grid(column=0, row=1, columnspan=2, sticky="EW", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
+        self.column1.grid(column=0, row=0, sticky="NSEW")
+        self.column2.grid(column=1, row=0, sticky="NSEW")
+
+        self.bottom_frame.grid(column=0, row=1, columnspan=2, sticky="NSEW")
         
     def _get_settings(self): return get_json_data(SETTINGS_PATH)
     def _set_settings(self):
@@ -266,7 +293,7 @@ class UserDataWindow:
 
         for no,v in enumerate(self.data):
             bg_color: str
-            # Shifts between dark and light grey for each data entry for easier viewing
+            # Shifts between dark and light grey for each data entry for appearance
             if no % 2 == 0: bg_color = "grey"
             else: bg_color = "darkgrey"
 
@@ -277,7 +304,12 @@ class UserDataWindow:
             data_text = f"{v['type']} - Smokes: {v['smokes']} - Grams: {v['grams']}"
             data_label = Label(frame, text=data_text, bg=bg_color)
 
-            cost_label = Label(frame, text=f"Total: {round(float(v['grams'])*self.price, 2)},-", bg=bg_color)
+            ppf = get_json_data(SETTINGS_PATH)['price_per_filter']
+            ppp = get_json_data(SETTINGS_PATH)['price_per_paper']
+
+            total = float(v['grams']) * self.price + (ppf + ppp)
+
+            cost_label = Label(frame, text=f"Total: {round(total, 2)},-", bg=bg_color)
 
             self.data_entry_frames.append((date_label,data_label,cost_label,frame))
 

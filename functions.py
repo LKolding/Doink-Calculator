@@ -38,11 +38,11 @@ def get_from_db(owner: str, date: str = None) -> list:
     if len(data) == 0: raise Exception("No data found for user %s"%owner)
     else: return data
 
-def write_to_db(type: str, owner: str, smokes: float, grams: float):
+def write_to_db(type: str, owner: str, smokes: float, grams: float, filter: bool, paper: bool):
     '''writes row string argument to the end of csv file'''
     current = datetime.datetime.today()
     formatted_time = current.strftime("%b %d %Y %H:%M:%S")
-    line = [str(formatted_time), str(owner), str(type), float(smokes), float(grams)]
+    line = [str(formatted_time), str(owner), str(type), float(smokes), float(grams), bool(filter), bool(paper)]
     with open(CSV_ENTRIES_PATH, "a+") as f:
         writer = csv.writer(f)
         writer.writerow(line)
