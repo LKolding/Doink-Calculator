@@ -42,7 +42,7 @@ def write_to_db(type: str, owner: str, smokes: float, grams: float):
     '''writes row string argument to the end of csv file'''
     current = datetime.datetime.today()
     formatted_time = current.strftime("%b %d %Y %H:%M:%S")
-    line = [formatted_time, owner, type, smokes, grams]
+    line = [str(formatted_time), str(owner), str(type), float(smokes), float(grams)]
     with open(CSV_ENTRIES_PATH, "a+") as f:
         writer = csv.writer(f)
         writer.writerow(line)

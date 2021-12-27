@@ -176,6 +176,9 @@ class SettingsWindow:
         self.btn_color_selection = StringVar(self.column1, value=self.settings['button_color'])
         self.btn_color_darkblue = Radiobutton(self.column1, text="Dark blue",variable=self.btn_color_selection, value="darkblue")
         self.btn_color_lightblue = Radiobutton(self.column1, text="Light blue",variable=self.btn_color_selection, value="lightblue")
+        # column 1 3rd row
+        self.price_label = Label(self.column1, text="Price per gram: (current price: %.2f)"%self.settings['cost_per_gram'])
+        self.price_entry = Entry(self.column1)
         # column 2
         self.column2 = Frame(self.root)
         self.users_label = Label(self.column2, text="Users:")
@@ -198,6 +201,9 @@ class SettingsWindow:
         self.btn_color_label.grid(sticky="W")
         self.btn_color_darkblue.grid()
         self.btn_color_lightblue.grid()
+
+        self.price_label.grid(sticky="W")
+        self.price_entry.grid()
         # column 2
         self.users_label.grid(column=0, row=0, columnspan=2)
         self.users_list.grid(column=0, row=1, columnspan=2, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
@@ -206,12 +212,13 @@ class SettingsWindow:
         # self.root
         self.column1.grid(column=0, row=0)
         self.column2.grid(column=1, row=0)
-        self.apply_button.grid(column=0, row=1, columnspan=2, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
+        self.apply_button.grid(column=0, row=1, columnspan=2, sticky="EW", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
         
     def _get_settings(self): return get_json_data(SETTINGS_PATH)
     def _set_settings(self):
         self.settings['background_color'] = self.bg_color_selection.get()
         self.settings['button_color'] = self.btn_color_selection.get()
+        self.settings['cost_per_gram'] = float(self.price_entry.get())
 
         users = []
         for i in range(self.users_list.size()): users.append(self.users_list.get(i))
@@ -238,6 +245,7 @@ class UserDataWindow:
             self.root.destroy()
             del self
             return
+        self.price = float(get_json_data(SETTINGS_PATH)['cost_per_gram'])
         self._config()
         self._init_widgets()
         self._grid()
@@ -264,7 +272,9 @@ class UserDataWindow:
             data_text = f"{v['type']} - Smokes: {v['smokes']} - Grams: {v['grams']}"
             data_label = Label(frame, text=data_text, bg=bg_color)
 
-            self.data_entry_frames.append((date_label,data_label,frame))
+            cost_label = Label(frame, text=f"Total: {round(float(v['grams'])*self.price, 2)},-", bg=bg_color)
+
+            self.data_entry_frames.append((date_label,data_label,cost_label,frame))
 
     def _grid(self):
         for i,v in enumerate(self.data_entry_frames):
@@ -272,9 +282,11 @@ class UserDataWindow:
                 # date label
                 v[0].grid(column=0,row=0, sticky="W", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
                 # data label
-                v[1].grid(column=0, row=1, sticky="W", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
+                v[1].grid(column=0, row=1, sticky="W", padx=DEFAULT_PADDING["x"])
+                # cost label
+                v[2].grid(column=0, row=2, sticky="W", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
                 # frame containing both labels
-                v[2].grid(column=0, row=i, sticky="EW")
+                v[3].grid(column=0, row=i, sticky="EW")
             except: print("couldn't grid")
 
         self.col1.grid()
