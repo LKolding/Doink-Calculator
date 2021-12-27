@@ -11,7 +11,7 @@ SETTINGS_PATH = "settings.json"
 settings = get_json_data(SETTINGS_PATH)
 
 DEFAULT_PADDING = {'x':10,'y':10}
-OWNERS = settings['owners']
+#OWNERS = settings['owners']
 
 BACKGROUND_COLOR = settings["background_color"]
 BUTTON_COLOR = settings["button_color"]
@@ -22,6 +22,7 @@ def show_info(title, msg): messagebox.showinfo(title, msg, type="ok", icon="info
 class MainGUI:
     def __init__(self): 
         self.root = Tk()
+        self.owners = get_json_data(SETTINGS_PATH)['owners']
         self._config()
         self._init_widgets()
         self._grid()
@@ -34,7 +35,7 @@ class MainGUI:
     def _init_widgets(self):
         # ROW 1
         self.row1 = Frame(self.root, bg=BACKGROUND_COLOR)
-        self.user_selection_spinbox = Spinbox(self.row1, values=OWNERS, state="readonly")
+        self.user_selection_spinbox = Spinbox(self.row1, values=self.owners, state="readonly")
         self.view_db_button = Button(self.row1, bg=BUTTON_COLOR,text="View data for user: ", command=self.view_db)
         self.add_doink_button = Button(self.row1, bg=BUTTON_COLOR, text="Add a doink", command=self.open_dialog)
         self.settings_button = Button(self.row1, bg=BUTTON_COLOR, text="Settings",command=self.view_settings)
@@ -69,6 +70,7 @@ class MainGUI:
 class AddEntry:
     def __init__(self): 
         self.root = Tk()
+        self.owners = get_json_data(SETTINGS_PATH)['owners']
         self._config()
         self._init_widgets()
         self._grid()
@@ -81,7 +83,7 @@ class AddEntry:
     def _init_widgets(self):
         # ROW 0
         self.row0 = Frame(self.root)
-        self.owner_selection_spinbox = Spinbox(self.row0, values=OWNERS, state="readonly")
+        self.owner_selection_spinbox = Spinbox(self.row0, values=self.owners, state="readonly")
         # ROW 1
         self.row1 = Frame(self.root)
         self.entry_type = StringVar(self.row1, value="doink")
@@ -218,7 +220,10 @@ class SettingsWindow:
     def _set_settings(self):
         self.settings['background_color'] = self.bg_color_selection.get()
         self.settings['button_color'] = self.btn_color_selection.get()
-        self.settings['cost_per_gram'] = float(self.price_entry.get())
+        # catches exception if entry is left unchanged/is containing an illegal value
+        try: price = float(self.price_entry.get())
+        except: pass
+        else: self.settings['cost_per_gram'] = price
 
         users = []
         for i in range(self.users_list.size()): users.append(self.users_list.get(i))
@@ -286,7 +291,11 @@ class UserDataWindow:
                 # cost label
                 v[2].grid(column=0, row=2, sticky="W", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
                 # frame containing both labels
-                v[3].grid(column=0, row=i, sticky="EW")
+                if i<5: v[3].grid(column=0, row=i, sticky="EW")
+                elif i>=5 and i<10: v[3].grid(column=1, row=i-5, sticky="EW")
+                elif i>=10 and i<15: v[3].grid(column=2, row=i-10, sticky="EW")
+                elif i>=15 and i<20: v[3].grid(column=2, row=i-15, sticky="EW")
+                else: show_warning("I knew this would happen eventualy", "Sorry, can't show you all the entries no more, tell me to fix this")
             except: print("couldn't grid")
 
         self.col1.grid()

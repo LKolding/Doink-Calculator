@@ -1,1 +1,1 @@
-{"owners": ["Bob", "Alice", "Peter"], "background_color": "darkgrey", "button_color": "lightblue", "cost_per_gram":70}
+{"owners": ["Bob", "Peter"], "background_color": "darkgrey", "button_color": "lightblue", "cost_per_gram": 70.0}
