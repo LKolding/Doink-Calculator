@@ -1,15 +1,1 @@
 date,owner,type,smokes,grams,filter,paper
-Dec 27 2021 18:16:00,Bob,bowl,2.0,0.8
-Dec 27 2021 18:16:24,Bob,doink,1.0,0.4
-Dec 27 2021 23:09:33,Bob,doink,0.7,0.7,True,True
-Dec 27 2021 23:13:07,Bob,doink,3.0,0.9,True,True
-Dec 27 2021 23:14:16,Bob,doink,2.0,0.4,True,True
-Dec 27 2021 23:16:00,Bob,doink,2.0,0.2,True,True
-Dec 27 2021 23:16:19,Bob,doink,2.0,0.2,True,True
-Dec 27 2021 23:16:26,Bob,doink,2.0,0.2,True,True
-Dec 27 2021 23:16:47,Bob,doink,0.2,2.0,True,True
-Dec 27 2021 23:18:23,Bob,doink,2.0,0.2,True,False
-Dec 27 2021 23:18:37,Bob,doink,2.0,0.2,True,True
-Dec 27 2021 23:18:42,Bob,doink,2.0,0.2,False,False
-Dec 27 2021 23:27:00,Bob,doink,2.0,0.32,True,False
-Dec 27 2021 23:29:38,Bob,doink,2.0,0.4,False,False

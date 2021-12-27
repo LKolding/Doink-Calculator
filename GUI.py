@@ -2,7 +2,6 @@ from tkinter import Tk
 from tkinter import Button, Entry, Radiobutton, Frame, Label, Spinbox, Listbox, Checkbutton
 from tkinter import StringVar, messagebox
 from tkinter import IntVar
-from tkinter.constants import SE
 
 from functions import write_to_db
 from functions import get_from_db
