@@ -98,7 +98,7 @@ class AddEntry:
         # ROW 3 gram entry 
         self.gram_entry_frame = Frame(self.main_frame, bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
         self.grams_label = Label(self.gram_entry_frame, text="Grams:", bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
-        self.grams_entry = Entry(self.gram_entry_frame)
+        self.grams_entry = Entry(self.gram_entry_frame, bg=BACKGROUND_COLOR)
         # ROW 4 checkbuttons
 
         self.filter_check = IntVar(self.main_frame, value=0)
@@ -111,7 +111,7 @@ class AddEntry:
         self.paper_checkbutton = Checkbutton(self.checkbuttons_frame, variable=self.paper_check, onvalue=1,offvalue=0, bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
         # ROW 5 add button
         self.submit_button_frame = Frame(self.main_frame, bg=BACKGROUND_COLOR, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING['y'])
-        self.add_button = Button(self.submit_button_frame, text="Add", command=self.add_entry)
+        self.add_button = Button(self.submit_button_frame, background=BACKGROUND_COLOR,text="Add", command=self.add_entry)
 
     def _grid(self):
         # ROW 0
@@ -135,7 +135,7 @@ class AddEntry:
         # ROW 5
         self.add_button.grid(column= 0, row= 0)
         # FRAMES
-        self.main_frame.grid(column= 0, row= 0, sticky="EW")
+        self.main_frame.grid(column= 0, row= 0, sticky="NSEW")
         self.type_entry_frame.grid(column= 0, row= 1)
         self.smokes_entry_frame.grid(column= 0, row= 2, sticky="EW")
         self.gram_entry_frame.grid(column= 0, row= 3, sticky="EW")
@@ -199,8 +199,14 @@ class SettingsWindow:
         self.btn_color_darkblue = Radiobutton(self.column1, text="Dark blue",variable=self.btn_color_selection, value="darkblue", bg=BACKGROUND_COLOR)
         self.btn_color_lightblue = Radiobutton(self.column1, text="Light blue",variable=self.btn_color_selection, value="lightblue", bg=BACKGROUND_COLOR)
         # column 1 3rd row
-        self.price_label = Label(self.column1, text="Price per gram: (current price: %.2f)"%self.settings['cost_per_gram'], bg=BACKGROUND_COLOR)
+        self.price_label = Label(self.column1, text="Price per gram: (%.2f)"%self.settings['cost_per_gram'], bg=BACKGROUND_COLOR)
         self.price_entry = Entry(self.column1, bg=BACKGROUND_COLOR)
+        # column 1 4th row
+        self.filter_price_label = Label(self.column1, text="Price per filter: (%.2f)"%self.settings['price_per_filter'], bg=BACKGROUND_COLOR)
+        self.filter_price_entry = Entry(self.column1, bg=BACKGROUND_COLOR)
+        # column 1 5th row
+        self.paper_price_label = Label(self.column1, text="Price per paper: (%.2f)"%self.settings['price_per_paper'], bg=BACKGROUND_COLOR)
+        self.paper_price_entry = Entry(self.column1, bg=BACKGROUND_COLOR)
         # column 2
         self.column2 = Frame(self.root, bg=BACKGROUND_COLOR)
         self.users_label = Label(self.column2, text="Users:", bg=BACKGROUND_COLOR)
@@ -226,7 +232,14 @@ class SettingsWindow:
         self.btn_color_lightblue.grid()
 
         self.price_label.grid(sticky="W")
-        self.price_entry.grid()
+        self.price_entry.grid(sticky="W")
+
+        self.filter_price_label.grid(sticky="W")
+        self.filter_price_entry.grid(sticky="W")
+
+        self.paper_price_label.grid(sticky="W")
+        self.paper_price_entry.grid(sticky="W")
+
         # column 2
         self.users_label.grid(column=0, row=0, columnspan=2)
         self.users_list.grid(column=0, row=1, columnspan=2, padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
@@ -234,13 +247,13 @@ class SettingsWindow:
         self.add_user_button.grid(column=1, row=2, sticky="EW", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
 
         # submit button
-        self.apply_button.grid(sticky="NSEW", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
+        self.apply_button.grid(sticky="E", padx=DEFAULT_PADDING["x"], pady=DEFAULT_PADDING["y"])
 
         # self.root
         self.column1.grid(column=0, row=0, sticky="NSEW")
         self.column2.grid(column=1, row=0, sticky="NSEW")
 
-        self.bottom_frame.grid(column=0, row=1, columnspan=2, sticky="NSEW")
+        self.bottom_frame.grid(column=0, row=1, columnspan=2, sticky="EW")
         
     def _get_settings(self): return get_json_data(SETTINGS_PATH)
     def _set_settings(self):
@@ -250,6 +263,14 @@ class SettingsWindow:
         try: price = float(self.price_entry.get())
         except: pass
         else: self.settings['cost_per_gram'] = price
+
+        try: ppf = float(self.filter_price_entry.get())
+        except: pass
+        else: self.settings['price_per_filter'] = ppf
+
+        try: ppp = float(self.paper_price_entry.get())
+        except: pass
+        else: self.settings['price_per_paper'] = ppp
 
         users = []
         for i in range(self.users_list.size()): users.append(self.users_list.get(i))
