@@ -15,7 +15,7 @@ def get_json_data(path) -> dict:
 def set_json_data(path, data):
     try:
         with open(path, "w") as f:
-            json.dump(data, f)
+            json.dump(data, f, sort_keys=True, indent=4)
 
     except: raise Exception("Couldn't write to '%s'"%path)
     

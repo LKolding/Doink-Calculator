@@ -3,10 +3,8 @@ from tkinter import Button, Entry, Radiobutton, Frame, Label, Spinbox, Listbox, 
 from tkinter import StringVar, messagebox
 from tkinter import IntVar
 
-from functions import write_to_db
-from functions import get_from_db
-from functions import get_json_data
-from functions import set_json_data
+from functions import write_to_db, get_from_db
+from functions import get_json_data, set_json_data
 
 SETTINGS_PATH = "settings.json"
 settings = get_json_data(SETTINGS_PATH)
@@ -319,7 +317,8 @@ class UserDataWindow:
 
             frame = Frame(self.root, bg=bg_color)
 
-            date_label = Label(frame, text=v['date'], bg=bg_color)
+            month, date, year, time = v['date'].split(" ")
+            date_label = Label(frame, text=f"{date}-{month}-{year} <> {time}", bg=bg_color)
 
             data_text = f"{v['type']} - Smokes: {v['smokes']} - Grams: {v['grams']}"
             data_label = Label(frame, text=data_text, bg=bg_color)
@@ -331,7 +330,7 @@ class UserDataWindow:
 
             cost_label = Label(frame, text=f"Total: {round(total, 2)},-", bg=bg_color)
 
-            self.data_entry_frames.append((date_label,data_label,cost_label,frame))
+            self.data_entry_frames.append((date_label, data_label, cost_label, frame))
 
     def _grid(self):
         for i,v in enumerate(self.data_entry_frames):
